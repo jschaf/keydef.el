@@ -70,10 +70,10 @@
 ;;; up and return nil.
 ;;;
 ;;; There is a fall-back mechanism, however, to handle exceptional
-;;; cases.  If foo-mode-map is undefined but the list mode-map-alist
-;;; contains an entry of the form (foo-mode-map foo-other-name-map),
-;;; then foo-other-name-map is used as the name of the
-;;; keymap.
+;;; cases.  If foo-mode-map is undefined but the list
+;;; `keydef-mode-map-alist' contains an entry of the form
+;;; (foo-mode-map foo-other-name-map), then foo-other-name-map is used
+;;; as the name of the keymap.
 ;;;
 ;;; If the mode-map is not loaded yet AND the command being bound to a
 ;;; key is undefined at the time of the keydef assignment, it presents
@@ -233,7 +233,7 @@
 ;; This variable is needed because the information is not readily
 ;; available for look-up in any other way. (Well, I don't want to get
 ;; into defadvice'ing use-local-map and stuff like that.)
-(defvar mode-map-alist
+(defvar keydef-mode-map-alist
   (list
    (quote (latex-mode tex-mode-map))
    (quote (shell-script-mode sh-mode-map)))
@@ -297,8 +297,8 @@ given in the mode line, Shell-script is one example I can think
 of where it doesn't---the map is named sh-mode-map. The common
 cases that I know about, including shell-script-mode and
 latex-mode, are handled as exceptions through the variable
-mode-map-alist. But for other cases you will need to look up the
-name of the mode-map that goes with the given mode."
+`keydef-mode-map-alist'. But for other cases you will need to
+look up the name of the mode-map that goes with the given mode."
   (let ((map (quote global-map))
         (modestring)
         (loaded t)
@@ -312,7 +312,7 @@ name of the mode-map that goes with the given mode."
           (setq modestring
                 (format "%s-mode"
                         (downcase (symbol-name (car seq)))))
-          (setq othermap (assq (intern modestring) mode-map-alist))
+          (setq othermap (assq (intern modestring) keydef-mode-map-alist))
           (if othermap
               (setq map (nth 1 othermap))
             (setq map (intern (format "%s-map" modestring))))
